@@ -3,4 +3,6 @@
     <string name="new_game">New Game</string>
     <string name="score">Score</string>
     <string name="exit">Exit</string>
+    <string name="pvai">Player vs. AI</string>
+    <string name="pvp">Player vs. Player</string>
 </resources>
