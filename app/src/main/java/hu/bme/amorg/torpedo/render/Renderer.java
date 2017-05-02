@@ -20,8 +20,9 @@ public class Renderer {
     private GameView view;
 
 
-    public Renderer(Context context) {
+    public Renderer(Context context, GameView view) {
         this.context = context;
+        this.view = view;
         init(0, 0);
     }
     public void init(int width, int height) {
@@ -29,20 +30,21 @@ public class Renderer {
         this.height = height;
         background = new Background(context);
         background.size(width,height);
+        draw();
     }
 
     public void step() {
         //TODO
     }
 
-    public void draw(Canvas canvas) {
-        background.render(canvas);
+    public void draw() {
+
         step();
         Canvas c = null;
         try {
             c = view.getHolder().lockCanvas();
             synchronized (view.getHolder()) {
-                //renderer.draw(c);
+                background.render(c);
             }
         } finally {
             if (c != null) {

@@ -38,12 +38,12 @@ public class GameView extends SurfaceView {
 
     private void init(final Context context){
         SurfaceHolder holder = getHolder();
-        renderer = new Renderer(context);
+        renderer = new Renderer(context,this);
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                renderer = new Renderer(context);
-                renderer.draw(canvas);
+                renderer = new Renderer(context,GameView.this);
+
             }
 
             @Override
