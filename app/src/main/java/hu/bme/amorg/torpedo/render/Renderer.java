@@ -27,7 +27,7 @@ public class Renderer {
     }
     public void init(int width, int height) {
         this.width = width;
-        this.height = height;
+        this.height = height/2;
         background = new Background(context);
         background.size(width,height);
         draw();
@@ -42,9 +42,12 @@ public class Renderer {
         step();
         Canvas c = null;
         try {
+
             c = view.getHolder().lockCanvas();
+
             synchronized (view.getHolder()) {
                 background.render(c);
+                //ITT KELL KIRAJZOLNI MINDENT
             }
         } finally {
             if (c != null) {

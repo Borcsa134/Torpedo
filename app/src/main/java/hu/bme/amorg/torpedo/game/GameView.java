@@ -23,12 +23,12 @@ public class GameView extends SurfaceView {
 
     public GameView(Context context) {
         super(context);
-        init(context);;
+        init(context);
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);;
+        init(context);
     }
 
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
