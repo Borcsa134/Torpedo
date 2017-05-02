@@ -22,5 +22,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button exit_button = (Button) findViewById(R.id.btn_exit);
+        exit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 }
