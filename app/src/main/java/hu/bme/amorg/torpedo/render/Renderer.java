@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 
 import hu.bme.amorg.torpedo.game.GameView;
 import hu.bme.amorg.torpedo.model.Background;
+import hu.bme.amorg.torpedo.model.Ship;
 
 /**
  * Created by snake on 2017. 05. 02..
@@ -18,6 +19,7 @@ public class Renderer {
 
     private Background background;
     private GameView view;
+    private Ship ships;
 
 
     public Renderer(Context context, GameView view) {
@@ -27,9 +29,11 @@ public class Renderer {
     }
     public void init(int width, int height) {
         this.width = width;
-        this.height = height/2;
+        this.height = height;
         background = new Background(context);
+        ships = new Ship(context);
         background.size(width,height);
+        ships.size(width,height);
         draw();
     }
 
@@ -47,7 +51,7 @@ public class Renderer {
 
             synchronized (view.getHolder()) {
                 background.render(c);
-                //ITT KELL KIRAJZOLNI MINDENT
+                ships.render(c);
             }
         } finally {
             if (c != null) {

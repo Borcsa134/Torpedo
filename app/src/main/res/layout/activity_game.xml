@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/gameView"
     android:orientation="vertical">
 
     <hu.bme.amorg.torpedo.game.GameView
-        android:id="@+id/gameViewPlayer"
+        android:id="@+id/gameView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <hu.bme.amorg.torpedo.game.GameView
-        android:id="@+id/gameViewOpponent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
-</LinearLayout>
+
+</RelativeLayout>
