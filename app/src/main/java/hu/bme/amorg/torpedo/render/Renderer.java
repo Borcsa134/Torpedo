@@ -11,7 +11,7 @@ import hu.bme.amorg.torpedo.model.Ship;
  * Created by snake on 2017. 05. 02..
  */
 
-public class Renderer {
+public class Renderer extends Thread{
     private Context context;
 
     private int width;
@@ -19,29 +19,44 @@ public class Renderer {
 
     private Background background;
     private GameView view;
-    private Ship ships;
+    private Ship shipsPlayer;
+    private Ship shipsOpponent;
 
+    private Canvas canvas=null;
+    private boolean running=false;
+
+    private int[][] layoutMatrixPlayer;
 
     public Renderer(Context context, GameView view) {
         this.context = context;
         this.view = view;
         init(0, 0);
+
     }
+
     public void init(int width, int height) {
         this.width = width;
         this.height = height;
+
         background = new Background(context);
-        ships = new Ship(context);
-        background.size(width,height);
-        ships.size(width,height);
-        draw();
+        background.size(width, height);
+
+        shipsPlayer = new Ship(context, 1);
+        shipsPlayer.size(width, height);
+
+        shipsOpponent = new Ship(context, 2);
+        shipsOpponent.size(width, height);
+
+        layoutMatrixPlayer = new int[10][10];
+
+        render(0,0);
     }
 
     public void step() {
         //TODO
     }
 
-    public void draw() {
+    public void render(int x, int y) {
 
         step();
         Canvas c = null;
@@ -51,11 +66,15 @@ public class Renderer {
 
             synchronized (view.getHolder()) {
                 background.render(c);
-                ships.render(c);
+                shipsPlayer.render(c);
+                shipsOpponent.render(c);
+                shipsOpponent.drawX(c, x, y);
+                shipsPlayer.drawX(c, x, y);
             }
         } finally {
             if (c != null) {
                 view.getHolder().unlockCanvasAndPost(c);
+
             }
         }
     }

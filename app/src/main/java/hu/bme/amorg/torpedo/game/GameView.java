@@ -3,6 +3,7 @@ package hu.bme.amorg.torpedo.game;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -32,40 +33,45 @@ public class GameView extends SurfaceView {
     }
 
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs,defStyleAttr);
+        super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    private void init(final Context context){
+    private void init(final Context context) {
         SurfaceHolder holder = getHolder();
-        renderer = new Renderer(context,this);
+        renderer = new Renderer(context, this);
         holder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                renderer = new Renderer(context,GameView.this);
+                    renderer = new Renderer(context, GameView.this);
 
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                /*boolean retry = true;
-                renderLoop.setRunning(false);
-                while (retry) {
-                    try {
-                        renderLoop.join();
 
-                        retry = false;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }*/
             }
 
             @Override
-            public void surfaceChanged(SurfaceHolder holder, int format,int width, int height) {
-                renderer.init(width,height);
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                renderer.init(width, height);
             }
         });
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                float x = e.getX();
+                float y = e.getY();
+                long posX = (long) x;
+                long posY = (long) y;
+                renderer.render((int) posX, (int) posY);
+                return true;
+        }
+        return false;
     }
 }
