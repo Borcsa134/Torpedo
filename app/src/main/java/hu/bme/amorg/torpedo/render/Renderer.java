@@ -11,7 +11,7 @@ import hu.bme.amorg.torpedo.model.Ship;
  * Created by snake on 2017. 05. 02..
  */
 
-public class Renderer extends Thread{
+public class Renderer extends  Thread{
     private Context context;
 
     private int width;
@@ -22,8 +22,7 @@ public class Renderer extends Thread{
     private Ship shipsPlayer;
     private Ship shipsOpponent;
 
-    private Canvas canvas=null;
-    private boolean running=false;
+
 
     private int[][] layoutMatrixPlayer;
 
@@ -52,13 +51,9 @@ public class Renderer extends Thread{
         render(0,0);
     }
 
-    public void step() {
-        //TODO
-    }
 
     public void render(int x, int y) {
 
-        step();
         Canvas c = null;
         try {
 
@@ -68,9 +63,12 @@ public class Renderer extends Thread{
                 background.render(c);
                 shipsPlayer.render(c);
                 shipsOpponent.render(c);
-                shipsOpponent.drawX(c, x, y);
-                shipsPlayer.drawX(c, x, y);
+                shipsOpponent.drawX(c, x, y); //a játékos támadása
+                shipsPlayer.drawX(c, x, y); //az ellenfél támadása
+                sleep(50);
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             if (c != null) {
                 view.getHolder().unlockCanvasAndPost(c);

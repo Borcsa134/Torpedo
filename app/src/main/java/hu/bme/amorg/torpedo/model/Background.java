@@ -10,7 +10,6 @@ import android.util.DisplayMetrics;
 
 import hu.bme.amorg.torpedo.R;
 
-import static hu.bme.amorg.torpedo.R.drawable.base;
 
 /**
  * Created by snake on 2017. 05. 02..
@@ -37,7 +36,7 @@ public class Background implements Renderable {
         bitmapDrawable.setTileModeY(Shader.TileMode.MIRROR);
 
         density = context.getResources().getDisplayMetrics().density;
-        Bitmap base_image = BitmapFactory.decodeResource(context.getResources(), base);
+        Bitmap base_image = BitmapFactory.decodeResource(context.getResources(), R.drawable.base);
         baseOpponent = new BitmapDrawable(base_image);
         basePlayer = new BitmapDrawable(base_image);
 
@@ -47,14 +46,6 @@ public class Background implements Renderable {
 
     }
 
-
-
-
-
-    @Override
-    public void step() {
-        //do nothing
-    }
 
     @Override
     public void size(int x, int y) {
