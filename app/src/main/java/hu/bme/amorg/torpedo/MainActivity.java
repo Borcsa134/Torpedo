@@ -13,15 +13,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //NEW GAME
         Button newgame_button = (Button) findViewById(R.id.btn_newgame);
         newgame_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,SelectGameActivity.class);
-                startActivity(i);
+                Intent newGame = new Intent(MainActivity.this,SelectGameActivity.class);
+                startActivity(newGame);
             }
         });
 
+        //EXIT
         Button exit_button = (Button) findViewById(R.id.btn_exit);
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override

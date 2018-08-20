@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 import hu.bme.amorg.torpedo.render.Renderer;
 
 /**
- * Created by snake on 2017. 05. 02..
+ * Created by Rufusz on 2017. 05. 02..
  */
 
 public class GameView extends SurfaceView {

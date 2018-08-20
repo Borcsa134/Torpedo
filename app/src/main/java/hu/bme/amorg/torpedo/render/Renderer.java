@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 
 import hu.bme.amorg.torpedo.game.GameView;
+import hu.bme.amorg.torpedo.game.Player;
 import hu.bme.amorg.torpedo.model.Background;
 import hu.bme.amorg.torpedo.model.Ship;
 
@@ -11,7 +12,8 @@ import hu.bme.amorg.torpedo.model.Ship;
  * Created by snake on 2017. 05. 02..
  */
 
-public class Renderer extends  Thread{
+public class Renderer extends Thread {
+
     private Context context;
 
     private int width;
@@ -19,9 +21,8 @@ public class Renderer extends  Thread{
 
     private Background background;
     private GameView view;
-    private Ship shipsPlayer;
-    private Ship shipsOpponent;
 
+    private Player player;
 
 
     private int[][] layoutMatrixPlayer;
@@ -38,17 +39,14 @@ public class Renderer extends  Thread{
         this.height = height;
 
         background = new Background(context);
-        background.size(width, height);
+        background.init(width, height);
 
-        shipsPlayer = new Ship(context, 1);
-        shipsPlayer.size(width, height);
-
-        shipsOpponent = new Ship(context, 2);
-        shipsOpponent.size(width, height);
+        player = new Player(context);
+        player.init(width, height);
 
         layoutMatrixPlayer = new int[10][10];
 
-        render(0,0);
+        render(0, 0);
     }
 
 
@@ -61,7 +59,7 @@ public class Renderer extends  Thread{
 
             synchronized (view.getHolder()) {
                 background.render(c);
-                shipsPlayer.render(c);
+                player.renderShips(c);
                 shipsOpponent.render(c);
                 shipsOpponent.drawX(c, x, y); //a játékos támadása
                 shipsPlayer.drawX(c, x, y); //az ellenfél támadása

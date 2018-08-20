@@ -48,26 +48,18 @@ public class Background implements Renderable {
 
 
     @Override
-    public void size(int x, int y) {
-        this.width=x;
-        this.height=y;
+    public void init(int x, int y) {
+        this.width = x;
+        this.height = y;
         bitmapDrawable.setBounds(0, 0, width, height);
-
-        if(density==3.0){
-            baseOpponent.setBounds(width/2-400,boxsize/4,width/2+400,boxsize/4+800);
-            basePlayer.setBounds(width/2-400,boxsize/4+840,width/2+400,boxsize/4+1640);
-        }
-        else if(density==4.0)
-            baseOpponent.setBounds(width/2-500,20,width/2+500,1020);
-        else
-            baseOpponent.setBounds(width/2-125,20,width/2+125,270);
+        baseOpponent.setBounds(width / 2 - (5 * boxsize), height / 4 - (5 * boxsize), width / 2 + (5 * boxsize), height / 4 + (5 * boxsize));
+        basePlayer.setBounds(width / 2 - (5 * boxsize), 3 * height / 4 - (5 * boxsize), width / 2 + (5 * boxsize), 3 * height / 4 + (5 * boxsize));
 
     }
 
     @Override
     public void render(Canvas canvas) {
-        if(bitmapDrawable!=null && canvas!=null)
-        {
+        if (bitmapDrawable != null && canvas != null) {
             bitmapDrawable.draw(canvas);
             baseOpponent.draw(canvas);
             basePlayer.draw(canvas);

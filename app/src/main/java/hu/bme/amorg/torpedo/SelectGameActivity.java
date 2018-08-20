@@ -14,6 +14,7 @@ public class SelectGameActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectgame);
 
+        //PLAYING AGAINST A.I.
         Button btn_vsai = (Button) findViewById(R.id.btn_vsai);
         btn_vsai.setOnClickListener(new View.OnClickListener() {
             @Override

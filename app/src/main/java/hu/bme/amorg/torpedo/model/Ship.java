@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +42,12 @@ public class Ship implements Renderable {
     private List<BitmapDrawable> shipsData;
     private List<BitmapDrawable> hitData;
 
-    private final String FASZOM = "Első buzi";
-
 
     private final Bitmap bitmapXblack;
     private final Bitmap bitmapXred;
+    private BitmapDrawable imageX;
 
-    private int step;
+    private int state;
     private int stepDir;
     private int yAI;
     private int xAI;
@@ -94,7 +92,7 @@ public class Ship implements Renderable {
     public void init() {
 
         random = new Random();
-        step = 0;
+        state = 0;
         stepDir = 0;
         xOrigin = 0;
         yOrigin = 0;
@@ -124,31 +122,30 @@ public class Ship implements Renderable {
 
 
     @Override
-    public void size(int x, int y) {
+    public void init(int x, int y) {
         this.height = y;
         this.width = x;
         startX = width / 2 - boxsize * 5;
-        startY = 10 * boxsize + boxsize / 2 + boxsize / 4;
+        startY = 3 * height / 4 - (5 * boxsize);
     }
 
     @Override
     public void render(Canvas canvas) {
 
         if (id == 2) {
-            startY = boxsize / 4;
+            startY = height / 4 - (5 * boxsize);
         }
 
         if (shipsData != null) {
             for (BitmapDrawable object : shipsData) {
-                if (id == 1)
-                    object.draw(canvas);
+                //if (id == 1)
+                object.draw(canvas);
             }
             return;
         }
 
         int hor;
         int ver;
-        boolean haveSpace = true;
 
         if (ships != null && canvas != null) {
             int i = 1;
@@ -156,15 +153,15 @@ public class Ship implements Renderable {
             shipsData = new ArrayList<>();
             for (BitmapDrawable object : ships) {
                 i++;
-                if (k % 2 == 0) {
+                if (k % 2 == 0) {   //Függőleges hajók
 
-                    hor = random.nextInt(9 - i + 1);
-                    ver = random.nextInt(9 - i + 1);
+                    hor = random.nextInt(10);
+                    ver = random.nextInt(10);
 
                     for (int j = ver; j < (ver + i); j++) {
-                        if (layoutMatrix[j][hor] == 1) {
-                            ver = random.nextInt(9 - i + 1);
-                            hor = random.nextInt(9 - i + 1);
+                        if (ver + i > 10 || layoutMatrix[j][hor] == 1) {
+                            ver = random.nextInt(10);
+                            hor = random.nextInt(10);
                             j = ver - 1;
                         }
 
@@ -180,15 +177,15 @@ public class Ship implements Renderable {
                         layoutMatrix[j][hor] = 1; //ahol hajó van, ott a mátrix értéke 1
                     i--;
 
-                } else if (k % 2 == 1) {
+                } else if (k % 2 == 1) {  //Vízszintes hajók
 
-                    hor = random.nextInt(9 - i + 1);
-                    ver = random.nextInt(9 - i + 1);
+                    hor = random.nextInt(10);
+                    ver = random.nextInt(10);
 
                     for (int j = hor; j < (hor + i); j++) {
-                        if (layoutMatrix[ver][j] == 1) {
-                            ver = random.nextInt(9 - i + 1);
-                            hor = random.nextInt(9 - i + 1);
+                        if (hor + i > 10 || layoutMatrix[ver][j] == 1) {
+                            ver = random.nextInt(10);
+                            hor = random.nextInt(10);
                             j = hor - 1;
 
                         }
@@ -204,8 +201,8 @@ public class Ship implements Renderable {
                         layoutMatrix[ver][j] = 1; //ahol hajó van, ott a mátrix értéke 1
 
                 }
-                if (id == 1)
-                    object.draw(canvas);
+                //if (id == 1)
+                object.draw(canvas);
                 shipsData.add(object);
                 k++;
             }
@@ -216,13 +213,35 @@ public class Ship implements Renderable {
         return layoutMatrix;
     }
 
+    public int[][] getHitMatrix() {
+        return hitMatrix;
+    }
+
+    public void setHitMatrix(int x, int y, boolean isHit) {
+        if (isHit) {
+            hitMatrix[x][y] = 1;
+            imageX = new BitmapDrawable(bitmapXred);
+            imageX.setBounds(startX + x * boxsize, startY + y * boxsize, startX + (x + 1) * boxsize, startY + (y + 1) * boxsize);
+            hitData.add(imageX);
+        } else {
+            hitMatrix[x][y] = 2;
+            imageX = new BitmapDrawable(bitmapXblack);
+            imageX.setBounds(startX + x * boxsize, startY + y * boxsize, startX + (x + 1) * boxsize, startY + (y + 1) * boxsize);
+            hitData.add(imageX);
+        }
+    }
+
+    public List<BitmapDrawable> getHitData() {
+        return hitData;
+    }
+
     public void stepAI() {
-        switch (step) {
+        switch (state) {
             case 0:
             case 1:
                 xAI = random.nextInt(800);
                 yAI = random.nextInt(800);
-                step = 1;
+                state = 1;
                 break;
 
                 /*if (xAI > 3 * boxsize)
@@ -244,7 +263,7 @@ public class Ship implements Renderable {
                 else if (stepDir == 3)
                     yAI += boxsize;
                 else {
-                    step = 0;
+                    state = 0;
                     stepDir = 0;
                     xOrigin = 0;
                     yOrigin = 0;
@@ -283,6 +302,26 @@ public class Ship implements Renderable {
         return new pair(i, j);
     }
 
+    public void drawXAI(Canvas canvas, int x, int y) {
+
+        int hor = random.nextInt(10);
+        int ver = random.nextInt(10);
+
+        if (x == 0 || y == 0)
+            return;
+
+        if (x > 12 * boxsize || y > 10 * boxsize || x < startX) {
+            for (BitmapDrawable object : hitData) {
+                if (object != null && canvas != null)
+                    object.draw(canvas);
+            }
+            return;
+        }
+
+        stepAI();
+
+    }
+
     public void drawX(Canvas canvas, int x, int y) {
 
         if (x == 0 || y == 0)
@@ -299,12 +338,11 @@ public class Ship implements Renderable {
 
         if (id == 1) {
             stepAI();
-            Log.d(FASZOM, "Steppelt az AI!" + step);
             x = xAI + 160;
             y = yAI;
         }
 
-        pair temp=tempData(x,y);
+        pair temp = tempData(x, y);
 
         int i = temp.getI();
         int j = temp.getJ();
@@ -321,36 +359,35 @@ public class Ship implements Renderable {
 
         if (j >= 0 && j < 10 && i < 10 && i >= 0) {
             if (hitMatrix[i][j] == 1) {
-                if (step == 2 && stepDir < 4) {
+                if (state == 2 && stepDir < 4) {
                     imageX = new BitmapDrawable(bitmapXblack);
                     //stepDir++;
-                    while(!isEmpty){
+                    while (!isEmpty) {
 
-                        temp = tempData(xAI-20,yAI+20);
+                        temp = tempData(xAI - 20, yAI + 20);
                         i = temp.getI();
                         j = temp.getJ();
                         xAI = xOrigin;
                         yAI = yOrigin;
 
-                        if(stepDir>3) {
+                        if (stepDir > 3) {
                             temp = tempData(random.nextInt(780), random.nextInt(780) + 40);
                             i = temp.getI();
                             j = temp.getJ();
-                            stepDir=0;
+                            stepDir = 0;
                         }
-                        if(j >= 0 && j < 10 && i < 10 && i >= 0 && hitMatrix[i][j]==1)
-                            isEmpty=true;
+                        if (j >= 0 && j < 10 && i < 10 && i >= 0 && hitMatrix[i][j] == 1)
+                            isEmpty = true;
                         stepDir++;
                         stepAI();
                     }
 
-                    xAI = j*boxsize;
-                    yAI = i*boxsize;
+                    xAI = j * boxsize;
+                    yAI = i * boxsize;
                     posX = startX + xAI;
-                    posY = startY +yAI;
+                    posY = startY + yAI;
 
-                    if (id == 1)
-                        Log.d(FASZOM, "Első helyen bassza el a program!");
+                    // if (id == 1)
                     /*try {
                         drawX(canvas, xOrigin, yOrigin);
                     } finally {
@@ -359,20 +396,19 @@ public class Ship implements Renderable {
 
                 } else {
                     if (id == 1)
-                        Log.d(FASZOM, "MÁSODIK HELYEN BAAAAAAZD");
                     /*try {
                         drawX(canvas, random.nextInt(780), random.nextInt(780) + 40);
                     } finally {
                         return;
                     }*/
-                    imageX = new BitmapDrawable(bitmapXblack);
-                    while(j < 0 && j > 9 && i > 9 && i < 0 && hitMatrix[i][j]==0) {
+                        imageX = new BitmapDrawable(bitmapXblack);
+                    /*while(j < 0 && j > 9 && i > 9 && i < 0 && hitMatrix[i][j]==0) {
                         temp = tempData(random.nextInt(780), random.nextInt(780) + 40);
                         i = temp.getI();
                         j = temp.getJ();
-                    }
-                    xAI = j*boxsize;
-                    yAI = i*boxsize;
+                    }*/
+                    xAI = j * boxsize;
+                    yAI = i * boxsize;
                     posX = startX + xAI;
                     posY = startY + yAI;
                 }
@@ -383,54 +419,52 @@ public class Ship implements Renderable {
                     stepDir = 0;
                 }
                 imageX = new BitmapDrawable(bitmapXred);
-                step = 2;
+                state = 2;
 
-                xAI = j*boxsize;
-                yAI = i*boxsize;
-                posX= startX + xAI;
-                posY = startY +yAI;
+                xAI = j * boxsize;
+                yAI = i * boxsize;
+                posX = startX + xAI;
+                posY = startY + yAI;
                 //stepAI();
 
             } else {
                 imageX = new BitmapDrawable(bitmapXblack);
-                if(step==2) {
+                if (state == 2) {
                     if (stepDir > 3)
                         stepDir++;
                     else
                         stepDir = 0;
                 }
-                posX=startX + xAI;
-                posY = startY +yAI;
+                posX = startX + xAI;
+                posY = startY + yAI;
                 xAI = xOrigin;
                 yAI = yOrigin;
             }
             hitMatrix[i][j] = 1;
         } else {
-            if (step == 2) {
+            if (state == 2) {
                 imageX = new BitmapDrawable(bitmapXblack);
                 xAI = xOrigin;
                 yAI = yOrigin;
                 stepDir++;
                 stepAI();
-                posX=startX+xAI;
-                posY=startY+xAI;
+                posX = startX + xAI;
+                posY = startY + xAI;
 
                 if (xOrigin == 0 && yOrigin == 0) {
                     xAI = 40;
                     yAI = 40;
                 }
                 if (stepDir > 3)
-                    step = 0;
-                if (id == 1)
-                    Log.d(FASZOM, "KURVÁK VÉR FOLYJON!");
+                    state = 0;
+                //if (id == 1)
                 /*try {
                     drawX(canvas, xOrigin, yOrigin);
                 } finally {
                     return;
                 }*/
 
-            }
-            else {
+            } else {
                 while (j < 0 && j > 9 && i > 9 && i < 0 && hitMatrix[i][j] == 0) {
                     temp = tempData(random.nextInt(780), random.nextInt(780) + 40);
                     i = temp.getI();
@@ -441,7 +475,7 @@ public class Ship implements Renderable {
                 posX = startX + xAI;
                 posY = startY + yAI;
                 imageX = new BitmapDrawable(bitmapXblack);
-                step = 0;
+                state = 0;
             /*try {
                 drawX(canvas, random.nextInt(780), random.nextInt(780) + 40);
             } finally {
@@ -451,7 +485,7 @@ public class Ship implements Renderable {
         }
 
 
-        imageX.setBounds(posX, posY, posX + boxsize, posY + boxsize);
+        //imageX.setBounds(posX, posY, posX + boxsize, posY + boxsize);
 
 
         /*if (posX < startX || posX >= startX + 10 * boxsize || posY >= startY + 10 * boxsize || posY < startY) {
@@ -461,7 +495,7 @@ public class Ship implements Renderable {
             drawX(canvas, random.nextInt(780), random.nextInt(780) + 20);
             return;
         } else*/
-        hitData.add(imageX);
+        //hitData.add(imageX);
 
         for (BitmapDrawable object : hitData) {
             if (object != null && canvas != null)
